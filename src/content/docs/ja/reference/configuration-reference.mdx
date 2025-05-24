@@ -528,6 +528,23 @@ Astroが生成したアセットへのリンクのプレフィックスを指定
 }
 ```
 
+**追加:** `astro@4.5.0`
+
+`assetsPrefix`にオブジェクトを渡して、各ファイルタイプに異なるドメインを指定することもできます。この場合、`fallback`プロパティが必要で、他のすべてのファイルのデフォルトとして使用されます。
+
+```js
+{
+  build: {
+    assetsPrefix: {
+      'js': 'https://js.cdn.example.com',
+      'mjs': 'https://js.cdn.example.com',
+      'css': 'https://css.cdn.example.com',
+      'fallback': 'https://cdn.example.com'
+    }
+  }
+}
+```
+
 ### build.serverEntry
 
 <p>
