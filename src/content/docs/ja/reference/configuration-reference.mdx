@@ -106,7 +106,7 @@ export default defineConfig({
 
 <p>
 
-**データ型:** `Record.<string, RedirectConfig>`<br />
+**データ型:** `Record<string, RedirectConfig>`<br />
 **デフォルト値:** `{}`<br />
 <Since v="2.9.0" />
 </p>
@@ -456,7 +456,7 @@ Viteに追加の設定項目を渡します。Astroがサポートしていな�
 <p>
 
 **データ型:** `string`<br />
-**デフォルト値:** `'./dist/client'`
+**デフォルト値:** `'./client'`
 </p>
 
 サーバーレンダリングされたページを持つウェブサイトをビルドする際の、クライアントサイドのCSSとJavaScriptの出力ディレクトリを制御します。`outDir`はコードがビルドされる場所を制御します。
@@ -477,7 +477,7 @@ Viteに追加の設定項目を渡します。Astroがサポートしていな�
 <p>
 
 **データ型:** `string`<br />
-**デフォルト値:** `'./dist/server'`
+**デフォルト値:** `'./server'`
 </p>
 
 SSRのビルド時にサーバーJavaScriptの出力ディレクトリを制御します。
@@ -517,7 +517,7 @@ SSRのビルド時にサーバーJavaScriptの出力ディレクトリを制御�
 
 <p>
 
-**データ型:** `string`<br />
+**データ型:** `string | Record<string, string>`<br />
 **デフォルト値:** `undefined`<br />
 <Since v="2.2.0" />
 </p>
