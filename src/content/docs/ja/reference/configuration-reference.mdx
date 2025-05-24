@@ -337,6 +337,46 @@ Astroコンポーネント内のスタイルをスコープするための戦略
 
 `'class'`を使用すると、Astroコンポーネント内の要素セレクターが（たとえばグローバルスタイルシートの）グローバルスタイルのデフォルトを上書きすることを保証できます。`'where'`を使用すると、詳細度をより細かく制御できますが、より高い詳細度のセレクター、レイヤー、その他のツールを使用して、適用されるセレクターを制御する必要があります。`'attribute'`を使用すると、要素の`class`属性を操作し、自分のスタイルロジックとAstroの適用するスタイルとの間の競合を回避する必要がある場合に便利です。
 
+### security
+
+<p>
+
+**データ型:** `Record<"checkOrigin", boolean> | undefined`<br />
+**デフォルト値:** `{checkOrigin: true}`<br />
+<Since v="4.9.0" />
+</p>
+
+Astroウェブサイトのセキュリティ対策を有効にします。
+
+これらの機能は、`server`モードを使用してオンデマンドでレンダリングされるページ、または`static`モードでプリレンダリングをオプトアウトするページでのみ存在します。
+
+デフォルトでは、Astroはオンデマンドレンダリングされるページで各リクエストによって送信されるURLと"origin"ヘッダーが一致するかを自動的にチェックします。`checkOrigin`を`false`に設定することで、この動作を無効にできます。
+
+```js
+// astro.config.mjs
+export default defineConfig({
+  output: "server",
+  security: {
+    checkOrigin: false
+  }
+})
+```
+
+#### security.checkOrigin
+
+<p>
+
+**データ型:** `boolean`<br />
+**デフォルト値:** `true`<br />
+<Since v="4.9.0" />
+</p>
+
+すべてのモダンブラウザによって自動的に渡される"origin"ヘッダーが、各`Request`によって送信されるURLと一致するかをチェックします。これはクロスサイトリクエストフォージェリ（CSRF）保護を提供するために使用されます。
+
+"origin"チェックは、オンデマンドでレンダリングされるページでのみ実行され、`POST`、`PATCH`、`DELETE`、`PUT`リクエストで、次の`content-type`ヘッダーのいずれかを持つもののみが対象です：`'application/x-www-form-urlencoded'`、`'multipart/form-data'`、`'text/plain'`。
+
+"origin"ヘッダーがリクエストの`pathname`と一致しない場合、Astroは403ステータスコードを返し、ページをレンダリングしません。
+
 ### vite
 
 <p>
