@@ -117,12 +117,18 @@ export default defineConfig({
 
 
 ```js
-{
+export default defineConfig({
   redirects: {
-    '/old': '/new',
-    '/blog/[...slug]': '/articles/[...slug]',
-  }
-}
+   '/old': '/new',
+   '/blog/[...slug]': '/articles/[...slug]',
+   '/about': 'https://example.com/about',
+   '/news': {
+     status: 302,
+     destination: 'https://example.com/news'
+   },
+   // '/product1/', '/product1' // 注意：これはサポートされていません
+	}
+})
 ```
 
 アダプターをインストールせずに静的に生成されたサイトでは、[`<meta http-equiv="refresh">`タグ](https://developer.mozilla.org/ja/docs/Web/HTML/Element/meta#http-equiv)によるクライアントリダイレクトを生成し、ステータスコードはサポートされません。
@@ -132,14 +138,14 @@ SSRの使用時か、`output: static`モードで静的アダプターを使用�
 [リダイレクトのステータスコード](https://developer.mozilla.org/ja/docs/Web/HTTP/Status#redirection_messages)は、リダイレクトの設定でオブジェクトを使用してカスタマイズできます。
 
 ```js
-{
+export default defineConfig({
   redirects: {
     '/other': {
       status: 302,
       destination: '/place',
     },
   }
-}
+})
 ```
 
 ### output
