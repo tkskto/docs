@@ -453,13 +453,13 @@ Viteに追加の設定項目を渡します。Astroがサポートしていな�
 **デフォルト値:** `'./dist/client'`
 </p>
 
-`output: 'server'`または`output: 'hybrid'`の場合にのみ、クライアントサイドのCSSとJavaScriptの出力ディレクトリを制御します。`outDir`はコードがビルドされる場所を制御します。
+サーバーレンダリングされたページを持つウェブサイトをビルドする際の、クライアントサイドのCSSとJavaScriptの出力ディレクトリを制御します。`outDir`はコードがビルドされる場所を制御します。
 
 `outDir`に対する相対パスを指定します。
 
 ```js
 {
-  output: 'server', // または'hybrid'
+  output: 'server',
   build: {
     client: './client'
   }
