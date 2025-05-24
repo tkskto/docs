@@ -642,6 +642,25 @@ localhost以外のIPなど、サーバーがリッスンするネットワーク
 }
 ```
 
+### server.allowedHosts
+
+<p>
+
+**データ型:** `Array<string> | true`<br />
+**デフォルト値:** `[]`<br />
+<Since v="5.4.0" />
+</p>
+
+Astroが応答を許可するホスト名のリストです。値が`true`に設定されている場合、任意のホスト名が許可されます。
+
+```js
+{
+  server: {
+  	allowedHosts: ['staging.example.com', 'qa.example.com']
+  }
+}
+```
+
 ### server.open
 
 <p>
