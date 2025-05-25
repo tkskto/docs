@@ -110,7 +110,7 @@ export default defineConfig({
 
 <p>
 
-**データ型:** `Record<string, RedirectConfig>`<br />
+**データ型:** `Record&lt;string, RedirectConfig&gt;`<br />
 **デフォルト値:** `{}`<br />
 <Since v="2.9.0" />
 </p>
@@ -351,14 +351,14 @@ Astroコンポーネント内のスタイルをスコープするための戦略
 
 <p>
 
-**データ型:** `Record<"checkOrigin", boolean> | undefined`<br />
+**データ型:** `Record&lt;"checkOrigin", boolean&gt; | undefined`<br />
 **デフォルト値:** `{checkOrigin: true}`<br />
 <Since v="4.9.0" />
 </p>
 
 Astroウェブサイトのセキュリティ対策を有効にします。
 
-これらの機能は、`server`モードを使用してオンデマンドでレンダリングされるページ、または`static`モードでプリレンダリングをオプトアウトするページでのみ存在します。
+これらの機能は、`server`モードを使用してオンデマンドでレンダリング（SSR）されるページ、または`static`モードでプリレンダリングをオプトアウトするページでのみ有効です。
 
 デフォルトでは、Astroはオンデマンドレンダリングされるページで各リクエストによって送信されるURLと"origin"ヘッダーが一致するかを自動的にチェックします。`checkOrigin`を`false`に設定することで、この動作を無効にできます。
 
@@ -383,7 +383,11 @@ export default defineConfig({
 
 すべてのモダンブラウザによって自動的に渡される"origin"ヘッダーが、各`Request`によって送信されるURLと一致するかをチェックします。これはクロスサイトリクエストフォージェリ（CSRF）保護を提供するために使用されます。
 
-"origin"チェックは、オンデマンドでレンダリングされるページでのみ実行され、`POST`、`PATCH`、`DELETE`、`PUT`リクエストで、次の`content-type`ヘッダーのいずれかを持つもののみが対象です：`'application/x-www-form-urlencoded'`、`'multipart/form-data'`、`'text/plain'`。
+"origin"チェックは、オンデマンドでレンダリングされるページでのみ実行され、次の`content-type`ヘッダーのいずれかを持つ`POST`、`PATCH`、`DELETE`、`PUT`リクエストのみが対象です：
+
+- `'application/x-www-form-urlencoded'`
+- `'multipart/form-data'`
+- `'text/plain'`
 
 "origin"ヘッダーがリクエストの`pathname`と一致しない場合、Astroは403ステータスコードを返し、ページをレンダリングしません。
 
@@ -431,9 +435,9 @@ Viteに追加の設定項目を渡します。Astroがサポートしていな�
 </p>
 
 各ページの出力ファイルの形式を制御します。この値はアダプターによって設定されることがあります。
-  - `'file'`: Astroは"/foo.html"のように、各ページに対応するHTMLファイルを生成します。
-  - `'directory'`: Astroは"/foo/index.html"のように、ディレクトリを生成しページに対応する`index.html`ファイルをネストします。
-  - `'preserve'`: Astroは、ソースフォルダに表示される通りにHTMLファイルを生成します。（例: `src/pages/about.astro`が`/about.html`を作成し、`src/pages/about/index.astro`がファイル`/about/index.html`を作成します。）
+  - `'file'`: AstroはルートをHTMLのファイル名として指定します。たとえば`src/pages/about.astro`と`src/pages/about/index.astro`はどちらも`/about.html`を作成します。
+  - `'directory'`: Astroはルートをディレクトリ名として指定します。たとえば`src/pages/about.astro`と`src/pages/about/index.astro`はどちらも`/about/index.html`を作成します。
+  - `'preserve'`: Astroは、ソースフォルダに表示される通りにHTMLファイルを生成します。`src/pages/about.astro`が`/about.html`を作成し、`src/pages/about/index.astro`が`/about/index.html`を作成します。
 
 ```js
 {
@@ -445,13 +449,16 @@ Viteに追加の設定項目を渡します。Astroがサポートしていな�
 ```
 
 #### Astro.urlへの影響
+
 `build.format`の値によって、ビルド時に`Astro.url`に設定される値が変わります。
+
 - `directory`の場合 - `Astro.url.pathname`は、フォルダの挙動を模倣するために、`/foo/`のように末尾にスラッシュを含みます。
 - `file`の場合 - `Astro.url.pathname`は、`/foo.html`のように`.html`を含みます。
 
 これにより、`new URL('./relative', Astro.url)`を使用して相対URLを作成すると、開発時とビルド時で一貫した動作となります。
 
 開発時の末尾のスラッシュの挙動を一貫させるために、ビルドフォーマットに応じて[`trailingSlash`オプション](#trailingslash)を`'always'`または`'never'`に制限できます。
+
 - `directory`の場合 - `trailingSlash: 'always'`を設定する
 - `file`の場合 - `trailingSlash: 'never'`を設定する
 
@@ -514,23 +521,25 @@ SSRのビルド時にサーバーJavaScriptの出力ディレクトリを制御�
   }
 }
 ```
+
 **以下も参照:**
+
 - outDir
 
 ### build.assetsPrefix
 
 <p>
 
-**データ型:** `string | Record<string, string>`<br />
+**データ型:** `string | Record&lt;string, string&gt;`<br />
 **デフォルト値:** `undefined`<br />
 <Since v="2.2.0" />
 </p>
 
 Astroが生成したアセットへのリンクのプレフィックスを指定します。アセットが現在のサイトとは異なるドメインから提供されている場合に使用できます。
 
-たとえばこの値を`https://cdn.example.com`に設定すると、アセットは（`base`オプションに関係なく）`https://cdn.example.com/_astro/...`から取得されます。アセットを配信するには、`./dist/_astro/`のファイルを`https://cdn.example.com/_astro/`にアップロードする必要があります。この手順はサードパーティのドメインがどのようにホストされているかによって異なります。
-
 これには、ローカルの`./dist/_astro`フォルダのアセットを、リモートドメインの対応する`/_astro/`フォルダにアップロードする必要があります。`_astro`パスの名前を変更するには、`build.assets`に新しいディレクトリを指定します。
+
+たとえば`assetsPrefix`に`https://cdn.example.com`を指定すると、アセットは（`base`オプションに関係なく）`https://cdn.example.com/_astro/...`から取得されます。
 
 ```js
 {
@@ -540,7 +549,7 @@ Astroが生成したアセットへのリンクのプレフィックスを指定
 }
 ```
 
-**追加:** `astro@4.5.0`
+<Since v="4.5.0" />
 
 `assetsPrefix`にオブジェクトを渡して、各ファイルタイプに異なるドメインを指定することもできます。この場合、`fallback`プロパティが必要で、他のすべてのファイルのデフォルトとして使用されます。
 
@@ -608,6 +617,7 @@ SSRのビルド時のサーバーエントリーポイントのファイル名�
 </p>
 
 プロジェクトのスタイルがcssファイルとしてブラウザに送信されるか、`<style>`タグとしてインラインで送信されるかを制御します。次のオプションから選択します。
+
  - `'always'` - プロジェクトのスタイルは`<style>`タグにインライン化されます。
  - `'auto'` - `ViteConfig.build.assetsInlineLimit`（デフォルト: 4kb）より小さいスタイルシートのみがインライン化されます。それ以外の場合、プロジェクトのスタイルは外部のスタイルシートとして送信されます。
  - `'never'` - プロジェクトのスタイルは外部のスタイルシートとして送信されます。
@@ -703,7 +713,7 @@ localhost以外のIPなど、サーバーがリッスンするネットワーク
 
 <p>
 
-**データ型:** `Array<string> | true`<br />
+**データ型:** `Array&lt;string&gt; | true`<br />
 **デフォルト値:** `[]`<br />
 <Since v="5.4.0" />
 </p>
@@ -964,20 +974,21 @@ prefetch: {
 
 <p>
 
-**データ型:** `string`<br />
-**デフォルト値:** `undefined`<br />
+**データ型:** `Object`<br />
+**デフォルト値:** `{route: '/_image', entrypoint: undefined}`<br />
 <Since v="3.1.0" />
 </p>
 
-画像最適化に使用するエンドポイントを設定します。`undefined`を設定すると、デフォルトのエンドポイントが使用されます。
-
-エンドポイントは常に`/_image`に挿入されます。
+開発時およびSSRで画像最適化に使用するエンドポイントを設定します。`entrypoint`に`undefined`を設定すると、デフォルトのエンドポイントが使用されます。
 
 ```js
 {
   image: {
-    // 例: カスタム画像エンドポイントを使用する
-    endpoint: './src/image-endpoint.ts',
+    // 例: `/custom_endpoint`でカスタム画像エンドポイントを使用する
+    endpoint: {
+       route: '/custom_endpoint',
+       entrypoint: 'src/my_endpoint.ts',
+    },
   },
 }
 ```
@@ -1028,8 +1039,8 @@ Sharp画像サービスが処理する画像サイズを制限するかどうか
 
 <p>
 
-**データ型:** `Array.<string>`<br />
-**デフォルト値:** `{domains: []}`<br />
+**データ型:** `Array&lt;string&gt;`<br />
+**デフォルト値:** `[]`<br />
 <Since v="2.10.10" />
 </p>
 
@@ -1051,7 +1062,7 @@ Sharp画像サービスが処理する画像サイズを制限するかどうか
 
 <p>
 
-**データ型:** `Array.<RemotePattern>`<br />
+**データ型:** `Array&lt;RemotePattern&gt;`<br />
 **デフォルト値:** `{remotePatterns: []}`<br />
 <Since v="2.10.10" />
 </p>
@@ -1135,22 +1146,65 @@ Sharp画像サービスが処理する画像サイズを制限するかどうか
 
 <p>
 
-**データ型:** `Partial<ShikiConfig>`
+**データ型:** `Partial&lt;ShikiConfig&gt;`
 </p>
 
-Shiki の設定項目です。使い方は[マークダウンの設定のドキュメント](/ja/guides/markdown-content/#shikiの設定)を確認してください。
+Shikiはデフォルトのシンタックスハイライターです。`markdown.shikiConfig`オブジェクトにすべてのオプションを設定できます：
+
+```js
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  markdown: {
+    shikiConfig: {
+      // Shikiの組み込みテーマから選択（または独自のテーマを追加）
+      // https://shiki.style/themes
+      theme: 'dracula',
+      // または、複数のテーマを提供
+      // デュアルライト/ダークテーマの使用については下記の注意を参照
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      // デフォルトの色を無効にする
+      // https://shiki.style/guide/dual-themes#without-default-color
+      // (v4.12.0で追加)
+      defaultColor: false,
+      // カスタム言語を追加
+      // ノート：Shikiには.astroを含む無数の言語が組み込まれています！
+      // https://shiki.style/languages
+      langs: [],
+      // 言語のカスタムエイリアスを追加
+      // エイリアスをShiki言語IDにマップ：https://shiki.style/languages#bundled-languages
+      // https://shiki.style/guide/load-lang#custom-language-aliases
+      langAlias: {
+        cjs: "javascript"
+      },
+      // 水平スクロールを防ぐためにワードラップを有効にする
+      wrap: true,
+      // カスタムトランスフォーマーを追加：https://shiki.style/guide/transformers
+      // 一般的なトランスフォーマーを見つける：https://shiki.style/packages/transformers
+      transformers: [],
+    },
+  },
+});
+```
+
+使い方は[シンタックスハイライトのガイド](/ja/guides/syntax-highlighting/)を確認してください。
 
 ### markdown.syntaxHighlight
 
 <p>
 
-**データ型:** `'shiki' | 'prism' | false`<br />
-**デフォルト値:** `shiki`
+**データ型:** `SyntaxHighlightConfig | SyntaxHighlightConfigType | false`<br />
+**デフォルト値:** `{ type: 'shiki', excludeLangs: ['math'] }`
 </p>
 
-使用するシンタックスハイライトを設定します。
-- `shiki` - [Shiki](https://github.com/shikijs/shiki)のハイライトを使用します。
-- `prism` - [Prism](https://prismjs.com/)のハイライトを使用します。
+マークダウンのコードブロック（```）に使用するシンタックスハイライターを指定します。これにより、Astroがマークダウンのコードブロックに適用するCSSクラスが決まります。
+
+- `shiki` - [Shiki](https://github.com/shikijs/shiki)のハイライトを使用します。デフォルトで`github-dark`テーマが設定されます。
+- `prism` - [Prism](https://prismjs.com/)ハイライターを使用し、[独自のPrismスタイルシートを提供](/ja/guides/syntax-highlighting/#add-a-prism-stylesheet)します。
 - `false` - シンタックスハイライトを使用しません。
 
 ```js
@@ -1302,18 +1356,6 @@ i18nルーティングを設定し、カスタマイズオプションを指定�
 
 より詳しい情報については、ガイド[Astroにおける国際化](/ja/guides/internationalization/)を参照してください。
 
-### i18n.defaultLocale
-
-<p>
-
-**データ型:** `string`<br />
-<Since v="3.5.0" />
-</p>
-
-ウェブサイト/アプリケーションのデフォルトのロケールです。これは必須のフィールドです。
-
-特定の言語のフォーマットや構文が強制されることはありませんが、互換性を最大化するために、必要に応じて小文字とハイフン（例: "es"、"pt-br"）を使用することを推奨します。
-
 ### i18n.locales
 
 <p>
@@ -1328,11 +1370,23 @@ i18nルーティングを設定し、カスタマイズオプションを指定�
 
 特定の言語のフォーマットや構文が強制されることはありませんが、フォルダ構造はリスト内のロケールに完全に一致しなければいけません。複数の`codes`がカスタムURLのパスプリフィックスを指す場合には、設定された`path`と同じ名前のフォルダにコンテンツを保存してください。
 
+### i18n.defaultLocale
+
+<p>
+
+**データ型:** `string`<br />
+<Since v="3.5.0" />
+</p>
+
+ウェブサイト/アプリケーションのデフォルトのロケールです。これは必須のフィールドです。
+
+特定の言語のフォーマットや構文が強制されることはありませんが、互換性を最大化するために、必要に応じて小文字とハイフン（例: "es"、"pt-br"）を使用することを推奨します。
+
 ### i18n.fallback
 
 <p>
 
-**データ型:** `Record.<string, string>`<br />
+**データ型:** `Record&lt;string, string&gt;`<br />
 <Since v="3.5.0" />
 </p>
 
@@ -1361,7 +1415,8 @@ export default defineConfig({
 
 <p>
 
-**データ型:** `Routing`<br />
+**データ型:** `object | "manual"`<br />
+**デフォルト値:** `object`<br />
 <Since v="3.7.0" />
 </p>
 
