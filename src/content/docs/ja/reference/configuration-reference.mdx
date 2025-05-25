@@ -110,7 +110,7 @@ export default defineConfig({
 
 <p>
 
-**データ型:** `Record&lt;string, RedirectConfig&gt;`<br />
+**データ型:** `Record<string, RedirectConfig>`<br />
 **デフォルト値:** `{}`<br />
 <Since v="2.9.0" />
 </p>
@@ -351,7 +351,7 @@ Astroコンポーネント内のスタイルをスコープするための戦略
 
 <p>
 
-**データ型:** `Record&lt;"checkOrigin", boolean&gt; | undefined`<br />
+**データ型:** `Record<"checkOrigin", boolean> | undefined`<br />
 **デフォルト値:** `{checkOrigin: true}`<br />
 <Since v="4.9.0" />
 </p>
@@ -530,7 +530,7 @@ SSRのビルド時にサーバーJavaScriptの出力ディレクトリを制御�
 
 <p>
 
-**データ型:** `string | Record&lt;string, string&gt;`<br />
+**データ型:** `string | Record<string, string>`<br />
 **デフォルト値:** `undefined`<br />
 <Since v="2.2.0" />
 </p>
@@ -713,7 +713,7 @@ localhost以外のIPなど、サーバーがリッスンするネットワーク
 
 <p>
 
-**データ型:** `Array&lt;string&gt; | true`<br />
+**データ型:** `Array<string> | true`<br />
 **デフォルト値:** `[]`<br />
 <Since v="5.4.0" />
 </p>
@@ -760,7 +760,9 @@ Astroが応答を許可するホスト名のリストです。値が`true`に設
 
 ## セッションのオプション
 
+<p>
 <Since v="5.7.0" />
+</p>
 
 Astroプロジェクトのセッションストレージを設定します。これは、セッションデータを永続的な方法で保存し、異なるリクエスト間でアクセスできるようにするために使用されます。
 一部のアダプターはデフォルトのセッションドライバーを提供する場合がありますが、独自の設定で上書きできます。
@@ -810,7 +812,7 @@ Astroプロジェクトのセッションストレージを設定します。こ
 
 <p>
 
-**データ型:** `Record&lt;string, unknown&gt; | undefined`<br />
+**データ型:** `Record<string, unknown> | undefined`<br />
 **デフォルト値:** `{}`<br />
 <Since v="5.7.0" />
 </p>
@@ -1039,7 +1041,7 @@ Sharp画像サービスが処理する画像サイズを制限するかどうか
 
 <p>
 
-**データ型:** `Array&lt;string&gt;`<br />
+**データ型:** `Array<string>`<br />
 **デフォルト値:** `[]`<br />
 <Since v="2.10.10" />
 </p>
@@ -1062,7 +1064,7 @@ Sharp画像サービスが処理する画像サイズを制限するかどうか
 
 <p>
 
-**データ型:** `Array&lt;RemotePattern&gt;`<br />
+**データ型:** `Array<RemotePattern>`<br />
 **デフォルト値:** `{remotePatterns: []}`<br />
 <Since v="2.10.10" />
 </p>
@@ -1130,7 +1132,7 @@ Sharp画像サービスが処理する画像サイズを制限するかどうか
 ### image.experimentalBreakpoints
 
 <p>
-**データ型:** `Array&lt;number&gt;`<br />
+**データ型:** `Array<number>`<br />
 **デフォルト値:** `[640, 750, 828, 1080, 1280, 1668, 2048, 2560] | [640, 750, 828, 960, 1080, 1280, 1668, 1920, 2048, 2560, 3200, 3840, 4480, 5120, 6016]`<br />
 </p>
 
@@ -1146,7 +1148,7 @@ Sharp画像サービスが処理する画像サイズを制限するかどうか
 
 <p>
 
-**データ型:** `Partial&lt;ShikiConfig&gt;`
+**データ型:** `Partial<ShikiConfig>`
 </p>
 
 Shikiはデフォルトのシンタックスハイライターです。`markdown.shikiConfig`オブジェクトにすべてのオプションを設定できます：
@@ -1232,7 +1234,7 @@ export default defineConfig({
 
 <p>
 
-**データ型:** `Array&lt;string&gt;`<br />
+**データ型:** `Array<string>`<br />
 **デフォルト値:** `['math']`
 </p>
 
@@ -1386,7 +1388,7 @@ i18nルーティングを設定し、カスタマイズオプションを指定�
 
 <p>
 
-**データ型:** `Record&lt;string, string&gt;`<br />
+**データ型:** `Record<string, string>`<br />
 <Since v="3.5.0" />
 </p>
 
@@ -1537,7 +1539,7 @@ export default defineConfig({
 
 <p>
 
-**データ型:** `Record&lt;string, string&gt;`<br />
+**データ型:** `Record<string, string>`<br />
 **デフォルト値:** `{}`<br />
 <Since v="4.3.0" />
 </p>
