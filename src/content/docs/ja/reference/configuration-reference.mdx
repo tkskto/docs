@@ -91,7 +91,7 @@ export default defineConfig({
 
 本番環境でGETリクエストのリダイレクトが発生する場合、301（永続的）リダイレクトになります。その他のリクエストメソッドの場合は、308（永続的で、リクエストメソッドを保持）リダイレクトになります。
 
-プリレンダリングされたページの末尾スラッシュは、ホスティングプラットフォームによって処理され、選択した設定を尊重しない場合があります。詳細については、ホスティングプラットフォームのドキュメントを参照してください。現時点では、このユースケースにAstroの[リダイレクト](#redirects)を使用することはできません。
+プリレンダリングされたページの末尾スラッシュは、ホスティングプラットフォームによって処理され、選択した設定を尊重しない場合があります。詳細については、ホスティングプラットフォームのドキュメントを参照してください。現時点では、このユースケースにAstroの[リダイレクト](#redirects)を使用できません。
 
 本番用ホストが末尾のスラッシュの有無を厳格に扱う場合に、この設定項目を使用してください。
 
@@ -117,7 +117,7 @@ export default defineConfig({
 
 リダイレクトのマッピングを指定します。マッチするルートをキーに、リダイレクト先のパスを値にします。
 
-動的ルートと静的ルートの両方をリダイレクトできますが、同じ種類のルートにのみリダイレクトできます。たとえば、`'/article': '/blog/[...slug]'` のようなリダイレクトはできません。
+動的ルートと静的ルートの両方をリダイレクトできますが、同じ種類のルートにのみリダイレクトできます。たとえば、`'/article': '/blog/[...slug]'`のようなリダイレクトはできません。
 
 
 ```js
@@ -182,7 +182,7 @@ export default defineConfig({
 **データ型:** `AstroIntegration`
 </p>
 
-ビルドアダプターにより、好みのサーバー、サーバーレス、エッジのホストにデプロイできます。[Cloudflare](/ja/guides/integrations-guide/cloudflare/)、[Netlify](/ja/guides/integrations-guide/netlify/)、[Node.js](/ja/guides/integrations-guide/node/)、[Vercel](/ja/guides/integrations-guide/vercel/)などのファーストパーティーのアダプターをインポートするか、[コミュニティアダプター](https://astro.build/integrations/2/?search=&categories%5B%5D=adapters)をインポートし、AstroのSSRを活用しましょう。
+ビルドアダプターにより、好みのサーバー、サーバーレス、エッジのホストにデプロイできます。[Cloudflare](/ja/guides/integrations-guide/cloudflare/)、[Netlify](/ja/guides/integrations-guide/netlify/)、[Node.js](/ja/guides/integrations-guide/node/)、[Vercel](/ja/guides/integrations-guide/vercel/)などのファーストパーティのアダプターをインポートするか、[コミュニティアダプター](https://astro.build/integrations/2/?search=&categories%5B%5D=adapters)をインポートし、AstroのSSRを活用しましょう。
 
 SSRについて詳しくは[サーバーサイドレンダリングのガイド](/ja/guides/on-demand-rendering/)を、ホストの完全な一覧は[デプロイのガイド](/ja/guides/deploy/)を確認してください。
 
@@ -205,13 +205,13 @@ import netlify from '@astrojs/netlify';
 
 カスタムインテグレーションでAstroを拡張します。インテグレーションは、Solid.jsなどのフレームワークのサポート、サイトマップなどの新しい機能、Partytownなど新しいライブラリの追加を一手に担います。
 
-Astro のインテグレーションを使い始めるためには[インテグレーションガイド](/ja/guides/integrations-guide/)を確認してください。
+Astroのインテグレーションを使い始めるためには[インテグレーションガイド](/ja/guides/integrations-guide/)を確認してください。
 
 ```js
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 {
-  // 例: Astro にReactとTailwindのサポートを追加
+  // 例: AstroにReactとTailwindのサポートを追加
   integrations: [react(), tailwind()]
 }
 ```
@@ -323,7 +323,11 @@ Astroがサイトを読み込むディレクトリを設定します。
 **デフォルト値:** `true`
 </p>
 
-HTML出力をミニファイし、HTMLファイルのサイズを小さくするためのオプションです。デフォルトでは、Astroは`.astro`コンポーネントのHTMLから改行を含む空白を削除します。これは開発モードと最終ビルドの両方で発生します。HTMLの圧縮を無効にするには、`compressHTML`フラグを`false`に設定します。
+HTML出力をミニファイし、HTMLファイルのサイズを小さくするためのオプションです。
+
+デフォルトでは、Astroは`.astro`コンポーネントのHTMLから改行を含む空白を削除します。一部の空白は、HTMLの視覚的なレンダリングを保持するために必要に応じて保持されます。これは開発モードと最終ビルドの両方で発生します。
+
+HTMLの圧縮を無効にするには、`compressHTML`を`false`に設定します。
 
 ```js
 {
@@ -341,9 +345,9 @@ HTML出力をミニファイし、HTMLファイルのサイズを小さくする
 </p>
 
 Astroコンポーネント内のスタイルをスコープするための戦略を指定します。次のオプションから選択してください。
-  - `'where'` 		- `:where`セレクターを使用し、詳細度（specificity）は増加しません。
-  - `'class'` 		- クラスベースのセレクターを使用し、詳細度は1だけ増加します。
-  - `'attribute'` 	- `data-`属性を使用し、詳細度は1だけ増加します。
+  - `'where'` - `:where`セレクターを使用し、詳細度（specificity）は増加しません。
+  - `'class'` - クラスベースのセレクターを使用し、詳細度は1だけ増加します。
+  - `'attribute'` - `data-`属性を使用し、詳細度は1だけ増加します。
 
 `'class'`を使用すると、Astroコンポーネント内の要素セレクターが（たとえばグローバルスタイルシートの）グローバルスタイルのデフォルトを上書きすることを保証できます。`'where'`を使用すると、詳細度をより細かく制御できますが、より高い詳細度のセレクター、レイヤー、その他のツールを使用して、適用されるセレクターを制御する必要があります。`'attribute'`を使用すると、要素の`class`属性を操作し、自分のスタイルロジックとAstroの適用するスタイルとの間の競合を回避する必要がある場合に便利です。
 
@@ -400,7 +404,7 @@ export default defineConfig({
 
 Viteに追加の設定項目を渡します。Astroがサポートしていない高度な設定が必要になった場合に有用です。
 
-`vite`に設定するオブジェクトの完全なドキュメントは[vite.dev](https://ja.vite.dev/config/)を確認してください。
+`vite`オブジェクトの完全なドキュメントは[vite.dev](https://ja.vite.dev/config/)を確認してください。
 
 #### 例
 
