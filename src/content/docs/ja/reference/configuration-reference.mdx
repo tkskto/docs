@@ -1518,7 +1518,7 @@ i18n:{
 
 デフォルトでは、Astroのi18nルーティングは、フォールバック設定に基づいて訪問者を新しい宛先にリダイレクトするページを作成します。ブラウザは更新され、URLバーに宛先アドレスが表示されます。
 
-`i18n.routing.fallback: "rewrite"`が設定されている場合、Astroは元のリクエストされたURLでフォールバックページのコンテンツをレンダリングするページを作成します。
+`i18n.routing.fallbackType: "rewrite"`が設定されている場合、Astroは元のリクエストされたURLでフォールバックページのコンテンツをレンダリングするページを作成します。
 
 以下の設定では、`src/pages/en/about.astro`ファイルがあるが`src/pages/fr/about.astro`がない場合、`astro build`コマンドは`dist/en/about.html`ページと同じコンテンツで`dist/fr/about.html`を生成します。サイト訪問者は`https://example.com/fr/about/`で英語版のページを見ることになり、リダイレクトされません。
 
