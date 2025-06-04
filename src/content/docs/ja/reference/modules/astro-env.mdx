@@ -1,0 +1,45 @@
+---
+title: 環境変数API
+sidebar:
+  label: 'astro:env'
+i18nReady: true
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 6
+---
+import Since from '~/components/Since.astro';
+
+<p><Since v="5.0.0" /></p>
+
+`astro:env` APIを使用すれば、型安全な環境変数のスキーマを構成できます。環境変数がサーバーまたはクライアントのどちらで参照できるかを指定したり、データ型や追加のプロパティを定義できます。例や使用方法については、[`astro:env`ガイド](/ja/guides/environment-variables/#型安全な環境変数)をご覧ください。
+
+## `astro:env`からのインポート
+
+```js
+import { 
+  getSecret,
+ } from 'astro:env/server';
+```
+
+### `getSecret()`
+
+<p>
+<Since v="5.0.0" />
+</p>
+
+`getSecret()`ヘルパー関数を使用すると、環境変数の生の値を取得できます。
+
+たとえば、ブール値を文字列として取得できます：
+
+```js
+import {
+  FEATURE_FLAG, // boolean
+  getSecret
+} from 'astro:env/server'
+
+getSecret('FEATURE_FLAG') // string | undefined
+```
+
+これは、スキーマで定義されていないシークレットを取得する場合にも役立ちます。例えば、データベースやAPIからの動的にデータを取得したシークレットなどです。
+
+環境変数を動的に取得する必要がある場合は、`process.env`の代わりに`getSecret()`を使用することをお勧めします。`getSecret()`の実装はアダプターによって提供されるため、アダプターを切り替えても呼び出し側を変更する必要がありません。開発環境とビルド時には、デフォルトで`process.env`が使用されます。
