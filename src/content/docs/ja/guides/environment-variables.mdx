@@ -1,11 +1,18 @@
 ---
-title: 環境変数
+title: 環境変数の使い方
 description: Astroプロジェクトでの環境変数の使い方を学ぶ
 i18nReady: true
 ---
 import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro'
+import ReadMore from '~/components/ReadMore.astro';
 
-Astroは環境変数に関するViteの組み込みのサポートを利用しています。環境変数を扱うために[Viteが備える任意の方式](https://vite.dev/guide/env-and-mode.html)を使用できます。
+Astroは[Viteの環境変数の組み込みサポート](#viteの組み込みサポート)へのアクセスを提供し、現在のプロジェクトの設定値（例：`site`、`base`）やプロジェクトが開発環境または本番環境で実行されているかどうかなどにアクセスできる[プロジェクトのデフォルト環境変数](#デフォルト環境変数)をいくつか含んでいます。
+
+Astroはまた、[型安全性を持つ環境変数を使用・整理する方法](#型安全な環境変数)も提供しています。これはAstroコンテキスト（Astroコンポーネント、ルートとエンドポイント、UIフレームワークコンポーネント、ミドルウェアなど）内で使用でき、[Astro設定のスキーマ](/ja/reference/configuration-reference/#env)で管理されます。
+
+## Viteの組み込みサポート
+
+Astroは環境変数に関するViteの組み込みのサポートを利用しています。環境変数はビルド時に静的に置き換えられ、[Viteが備える任意の方式](https://vite.dev/guide/env-and-mode.html)を使用できます。
 
 サーバ側のコードでは _すべて_ の環境変数が使えますが、クライアント側のコードではセキュリティのために`PUBLIC_`というプレフィックスを持つ環境変数のみが使えることに注意してください。
 
@@ -44,8 +51,6 @@ const isDev = import.meta.env.DEV;
 
 環境変数は、プロジェクトディレクトリの`.env`ファイルから読み込めます。
 
-また、`.env.production`や`.env.development`のように、ファイル名にモード(`production`または`development`)を付けることもできます。この場合、環境変数はそのモードでのみ有効になります。
-
 プロジェクトディレクトリに`.env`ファイルを作成し、そこにいくつかの変数を追加するだけです。
 
 ```ini title=".env"
@@ -55,7 +60,74 @@ DB_PASSWORD="foobar"
 PUBLIC_POKEAPI="https://pokeapi.co/api/v2"
 ```
 
+また、ファイル名自体に`.production`、`.development`、またはカスタムモード名（例：`.env.testing`、`.env.staging`）を追加することもできます。これにより、異なる時点で異なる環境変数のセットを使用できます。
+
+`astro dev`と`astro build`コマンドは、それぞれデフォルトで`"development"`と`"production"`モードになります。これらのコマンドを[`--mode`フラグ](/ja/reference/cli-reference/#--mode-string)と一緒に実行して、`mode`に異なる値を渡し、一致する`.env`ファイルを読み込むことができます。
+
+これにより、異なるAPIに接続する開発サーバーを実行したり、サイトをビルドしたりできます：
+
+<PackageManagerTabs>
+ <Fragment slot="npm">
+    ```shell
+    # "staging" APIに接続した開発サーバーを実行
+    npm run astro dev -- --mode staging
+
+    # 追加のデバッグ情報を持つ "production" APIに接続するサイトをビルド
+    npm run astro build -- --devOutput
+
+    # "testing" APIに接続するサイトをビルド
+    npm run astro build -- --mode testing
+    ```
+ </Fragment>
+ <Fragment slot="pnpm">
+    ```shell
+    # "staging" APIに接続した開発サーバーを実行
+    pnpm astro dev --mode staging
+
+    # 追加のデバッグ情報を持つ "production" APIに接続するサイトをビルド
+    pnpm astro build --devOutput
+
+    # "testing" APIに接続するサイトをビルド
+    pnpm astro build --mode testing
+    ```
+ </Fragment>
+  <Fragment slot="yarn">
+    ```shell
+    # "staging" APIに接続した開発サーバーを実行
+    yarn astro dev --mode staging
+
+    # 追加のデバッグ情報を持つ "production" APIに接続するサイトをビルド
+    yarn astro build --devOutput
+
+    # "testing" APIに接続するサイトをビルド
+    yarn astro build --mode testing
+    ```
+ </Fragment>
+</PackageManagerTabs>
+
 `.env`ファイルについてさらに知りたい場合は、[Viteのドキュメントを参照してください](https://vite.dev/guide/env-and-mode.html#env-files)。
+
+### Astro設定ファイル内で
+
+Astroは他のファイルを読み込む前に設定ファイルを評価します。つまり、`.env`ファイルで設定された環境変数にアクセスするために`import.meta.env`を`astro.config.mjs`で使用することはできません。
+
+[CLIで設定](#cliの利用)されたものなど、他の環境変数にアクセスするために設定ファイルで`process.env`を使用できます。
+
+また、[Viteの`loadEnv`ヘルパー](https://main.vite.dev/config/#using-environment-variables-in-config)を使用して`.env`ファイルを手動で読み込むこともできます。
+
+```js title="astro.config.mjs"
+import { loadEnv } from "vite";
+
+const { SECRET_PASSWORD } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
+```
+
+::::note
+`pnpm`では、プロジェクトに直接インストールされていないモジュールをインポートすることはできません。`pnpm`を使用している場合、`loadEnv`ヘルパーを使用するには`vite`をインストールする必要があります。
+
+```sh
+pnpm add -D vite
+```
+::::
 
 ### CLIの利用
 
@@ -97,7 +169,7 @@ SSRを使う場合、使用するSSRアダプターによって実行時に環�
 
 ## TypeScriptのインテリセンス
 
-デフォルトで、Viteは`vite/client.d.ts`の中で`import.meta.env`の型定義を提供します。
+デフォルトで、Astroは`astro/client.d.ts`の中で`import.meta.env`の型定義を提供します。
 
 `.env.[mode]`ファイルではより多くのカスタム環境変数を定義できますが、`PUBLIC_`をプレフィックスとするユーザーが定義した環境変数のTypeScriptインテリセンスを取得したいと思うかもしれません。
 
@@ -114,3 +186,163 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 ```
+
+## 型安全な環境変数
+
+`astro:env` APIを使用すると、[設定した環境変数](#環境変数を設定する)に対して型安全なスキーマを構成できます。これにより、環境変数がそれぞれサーバーまたはクライアントのどちらで利用可能かどうかを指定し、データ型や追加のプロパティを定義できます。
+
+<ReadMore>アダプターを開発している方は[アダプターを`astro:env`と互換性を持たせる方法](/ja/reference/adapter-reference/#envgetsecret)をご覧ください。</ReadMore>
+
+### 基本的な使い方
+
+#### スキーマを定義する
+
+スキーマを構成するには、Astro設定に`env.schema`オプションを追加します：
+
+```js title="astro.config.mjs" ins={4-8}
+import { defineConfig } from "astro/config";
+
+export default defineConfig({
+  env: {
+    schema: {
+      // ...
+    }
+  }
+})
+```
+
+次に、`envField`ヘルパーを使用して[変数を文字列、数値、列挙型、またはブール値として登録](#データ型)します。各変数に`context`（`"client"`または`"server"`）と`access`（`"secret"`または`"public"`）を提供して[環境変数の種類](#変数の種類)を定義し、`optional`や`default`などの追加プロパティをオブジェクトで渡します。
+
+```js title="astro.config.mjs" ins="envField"
+import { defineConfig, envField } from "astro/config";
+
+export default defineConfig({
+  env: {
+    schema: {
+      API_URL: envField.string({ context: "client", access: "public", optional: true }),
+      PORT: envField.number({ context: "server", access: "public", default: 4321 }),
+      API_SECRET: envField.string({ context: "server", access: "secret" }),
+    }
+  }
+})
+```
+
+`astro dev`または`astro build`を実行すると型が生成されますが、型の生成のみを行いたい場合は`astro sync`を実行します。
+
+#### スキーマから変数を使用する
+
+`/client`または`/server`モジュールから定義した変数を取得します。
+
+```astro
+---
+import { API_URL } from "astro:env/client";
+import { API_SECRET_TOKEN } from "astro:env/server";
+
+const data = await fetch(`${API_URL}/users`, {
+	method: "GET",
+	headers: {
+		"Content-Type": "application/json",
+		"Authorization": `Bearer ${API_SECRET_TOKEN}`
+	},
+})
+---
+
+<script>
+  import { API_URL } from "astro:env/client";
+
+  fetch(`${API_URL}/ping`)
+</script>
+```
+
+### 変数の種類
+
+スキーマで定義された`context`（`"client"`または`"server"`）と`access`（`"secret"`または`"public"`）の設定の組み合わせによって決まる3種類の環境変数があります：
+
+- **パブリッククライアント変数**：これらの変数はクライアントとサーバーの両方のバンドルに含まれ、`astro:env/client`モジュールを通じてクライアントとサーバーの両方からアクセスできます。
+
+   ```js
+   import { API_URL } from "astro:env/client";
+   ```
+
+- **パブリックサーバー変数**：これらの変数はサーバーバンドルのみに含まれ、`astro:env/server`モジュールを通じてサーバーのみでアクセスできます。
+
+   ```js
+   import { PORT } from "astro:env/server";
+   ```
+
+- **シークレットサーバー変数**：これらの変数はバンドルされず、`astro:env/server`モジュールを通じてサーバーのみでアクセスできます。
+
+   ```js
+   import { API_SECRET } from "astro:env/server";
+   ```
+
+   デフォルトでは、シークレットは実行時にのみ検証されます。[`validateSecrets: true`を設定](/ja/reference/configuration-reference/#envvalidatesecrets)すれば、起動時にもプライベート変数の検証を有効にできます。
+
+::::note
+**シークレットクライアント変数**はサポートされていません。このデータをクライアントに安全に送信する方法がないためです。したがって、スキーマで`context: "client"`と`access: "secret"`の両方を同時に設定することはできません。
+::::
+
+### データ型
+
+文字列、数値、列挙型、ブール値の4つのデータ型がサポートされています。
+
+```js
+import { envField } from "astro/config";
+
+envField.string({
+   // context & access
+   optional: true,
+   default: "foo",
+})
+
+envField.number({
+   // context & access
+   optional: true,
+   default: 15,
+})
+
+envField.boolean({
+   // context & access
+   optional: true,
+   default: true,
+})
+
+envField.enum({
+   // context & access
+   values: ["foo", "bar", "baz"],
+   optional: true,
+   default: "baz",
+})
+```
+
+<ReadMore>検証フィールドの完全なリストについては、[`envField` APIリファレンス](/ja/reference/configuration-reference/#envschema)をご覧ください。</ReadMore>
+
+### 動的にシークレットを取得する
+
+シークレットの生の値を取得したり、スキーマに定義されていないシークレットを取得したい場合があります。この場合、`astro:env/server`からエクスポートされている`getSecret()`を使用します。
+
+```js
+import {
+   FOO, // boolean
+   getSecret
+} from "astro:env/server";
+
+getSecret("FOO"); // string | undefined
+```
+
+<ReadMore>[APIリファレンス](/ja/reference/modules/astro-env/#getsecret)で詳細をご覧ください。</ReadMore>
+
+### 制限事項
+
+`astro:env`は仮想モジュールであり、Astroコンテキスト内でのみ使用できます。例えば、以下で使用できます。
+
+- ミドルウェア
+- Astroルートとエンドポイント
+- Astroコンポーネント
+- フレームワークコンポーネント
+- モジュール
+
+以下では使用できず、`process.env`を使う必要があります。
+
+- `astro.config.mjs`
+- スクリプト
